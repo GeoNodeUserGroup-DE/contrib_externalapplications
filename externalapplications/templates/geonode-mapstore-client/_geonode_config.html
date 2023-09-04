@@ -183,6 +183,13 @@
                 overrideLocalConfig(localConfig, _)
             }
 
+            localConfig.plugins.map_viewer?.push({ "name": "externalapplications" });
+
+            // configure 'externalapplication' resource type
+            localConfig.extensionsFolder = '';
+            // ensure that the http://localhost:8082 endpoint will not use proxy but direct requests
+            localConfig.proxyUrl.useCORS.push('http://localhost:8082');
+
             var pluginPageName = "catalogue";
             var selectedPluginName = "ResourcesGrid";
 
@@ -193,6 +200,9 @@
                     // apply configuration to the plugin
                     const plugin = localConfig.plugins[pluginPageName][i]
 
+                    // TODO
+
+                    // add externapplication filter
                     const filtersFormItems = resourcesGridPluginFiltersFormItems
                     filtersFormItems[0].items.push({
                         id: "externalapplication",
@@ -206,7 +216,7 @@
                     });
                     plugin.cfg.filtersFormItems = filtersFormItems
 
-
+                    // add 'create externalapplications' link
                     const menuItems = resourceGridPluginMenuItems
                     menuItems[0].items.push({
                         labelId: "externalapplications.register",
