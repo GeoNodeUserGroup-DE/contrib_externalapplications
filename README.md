@@ -66,3 +66,8 @@ python manage.py migrate externalapplications zero
 
 Once, all external applications have been deleted the app can be removed by deleting it from the `INSTALLED_APPS` in the `settings.py`.
 
+## Funding
+
+<img alt="Thünen Logo" align="middle" height="50" src="https://www.thuenen.de/typo3conf/ext/vc_theme/Resources/Public/Graphics/SVG-Logo.svg"/>
+
+This contrib app was funded by the [Thünen-Institute](https://www.thuenen.de)
