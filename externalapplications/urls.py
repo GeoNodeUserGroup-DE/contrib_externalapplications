@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from django.urls import re_path
 from . import views
 
 urlpatterns = [
-    url(r'^create/?$', views.create_external_application, name='external_application_create'),
-    url(r'^(?P<appid>[^/]+)/metadata_detail$', views.external_application_metadata_detail,
+    re_path(r'^create/?$', views.create_external_application, name='external_application_create'),
+    re_path(r'^(?P<appid>[^/]+)/metadata_detail$', views.external_application_metadata_detail,
         name='external_application_metadata_detail'),
 ]
