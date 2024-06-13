@@ -1,7 +1,7 @@
 # External Applications
 
 The External Applications app is a contrib module for GeoNode.
-The app is compatible with GeoNode v4.1.0 and (Geonode MapStore Client v4.1.0).
+The app is compatible with GeoNode `v4.1.x` and `v4.2.x`.
 
 The app adds a model `ExternalApplication` which extends from `GeoApp`.
 It integrates as any other resource type so that GeoNode can index, search, and filter an external application like Datasets, Maps, or Dashboards.
