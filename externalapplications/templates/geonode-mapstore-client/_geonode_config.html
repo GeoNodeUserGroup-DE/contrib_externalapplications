@@ -250,6 +250,22 @@
                 }
             }
 
+            Object.keys(localConfig.plugins).forEach((pageName) => {
+                localConfig.plugins[pageName].forEach((plugin) => {
+                    if (['ResourcesGrid'].includes(plugin.name) && plugin.cfg && plugin.cfg.datasetsPage) {
+                        const menuItems = plugin.cfg.datasetsPage.menuItems[0];
+                        if (Array.isArray(menuItems.items)) {
+                            menuItems.items.push({
+                                "labelId": "externalapplications.register",
+                                "value": "externalapplication",
+                                "type": "link",
+                                "href": "/externalapplications/create"
+                            })
+                        };
+                    }
+                });
+            });
+
             return localConfig;
         };
     })();
