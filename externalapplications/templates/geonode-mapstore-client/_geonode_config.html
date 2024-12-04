@@ -15,10 +15,11 @@
     const resourceGridPluginMenuItems = [
         {
             labelId: 'gnhome.addResource',
-            disableIf: "{(state('settings') && state('settings').isMobile) || !(state('user') && state('user').perms && state('user').perms.includes('add_resource')) ? true : false}",
+            disableIf: "{(state('settings') && state('settings').isMobile) || !(state('user') && state('user').perms && state('user').perms.includes('add_resource'))}",
             type: 'dropdown',
             variant: 'primary',
             responsive: true,
+            noCaret: true,
             items: [
                 {
                     labelId: 'gnhome.uploadDataset',
