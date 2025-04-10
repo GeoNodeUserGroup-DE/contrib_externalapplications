@@ -20,12 +20,8 @@ from geonode.resource.manager import resource_manager
 from .forms import ExternalApplicationCreateForm
 from .models import ExternalApplication
 
-_PERMISSION_MSG_GENERIC = _(
-    "You do not have permissions for this external application."
-)
-_PERMISSION_MSG_METADATA = _(
-    "You are not permitted to modify this external application's metadata"
-)
+_PERMISSION_MSG_GENERIC = _("You do not have permissions for this external application.")
+_PERMISSION_MSG_METADATA = _("You are not permitted to modify this external application's metadata")
 
 logger = logging.getLogger(__name__)
 
@@ -49,9 +45,7 @@ def create_external_application(request):
             )
 
             obj.set_missing_info()
-            resource_manager.set_permissions(
-                None, instance=obj, permissions=None, created=True
-            )
+            resource_manager.set_permissions(None, instance=obj, permissions=None, created=True)
 
             if form.files and form.files["thumbnail"]:
                 thumbnail = form.files["thumbnail"]
@@ -60,9 +54,7 @@ def create_external_application(request):
                     img.save(output, format="PNG")
                     content = output.getvalue()
                 obj.save_thumbnail(thumbnail.name, content)
-        return HttpResponseRedirect(
-            reverse("external_application_metadata_detail", args=(obj.pk,))
-        )
+        return HttpResponseRedirect(reverse("external_application_metadata_detail", args=(obj.pk,)))
     else:
         form = ExternalApplicationCreateForm()
         result = render(request, template, {"form": form})
@@ -70,23 +62,14 @@ def create_external_application(request):
 
 
 def _resolve_external_application(
-    request,
-    appid,
-    permission="base.change_resourcebase",
-    msg=_PERMISSION_MSG_GENERIC,
-    **kwargs
+    request, appid, permission="base.change_resourcebase", msg=_PERMISSION_MSG_GENERIC, **kwargs
 ):
     """
     Resolve the external application by the provided primary key and check
     the optional permission.
     """
     return resolve_object(
-        request,
-        ExternalApplication,
-        {"pk": appid},
-        permission=permission,
-        permission_msg=msg,
-        **kwargs
+        request, ExternalApplication, {"pk": appid}, permission=permission, permission_msg=msg, **kwargs
     )
 
 
@@ -112,18 +95,10 @@ def external_application_metadata_detail(
             group = GroupProfile.objects.get(slug=external_application.group.name)
         except ObjectDoesNotExist:
             group = None
-    site_url = (
-        settings.SITEURL.rstrip("/")
-        if settings.SITEURL.startswith("http")
-        else settings.SITEURL
-    )
+    site_url = settings.SITEURL.rstrip("/") if settings.SITEURL.startswith("http") else settings.SITEURL
     register_event(request, EventType.EVENT_VIEW_METADATA, external_application)
     return render(
         request,
         template,
-        context={
-            "resource": external_application,
-            "group": group,
-            "SITEURL": site_url
-        },
+        context={"resource": external_application, "group": group, "SITEURL": site_url},
     )

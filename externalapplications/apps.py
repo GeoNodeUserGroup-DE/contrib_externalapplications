@@ -18,9 +18,7 @@ def run_setup_hooks(*args, **kwargs):
     settings.TEMPLATES[0]["DIRS"].insert(0, os.path.join(LOCAL_ROOT, "templates"))
     title = "External Applications"
 
-    menu_filter_create = getattr(
-        settings, "EXTERNAL_APPLICATION_MENU_FILTER_AUTOCREATE", False
-    )
+    menu_filter_create = getattr(settings, "EXTERNAL_APPLICATION_MENU_FILTER_AUTOCREATE", False)
     if menu_filter_create:
         if not Menu.objects.filter(title=title).exists():
             ph = MenuPlaceholder.objects.filter(name="TOPBAR_MENU_LEFT").first()
@@ -28,9 +26,7 @@ def run_setup_hooks(*args, **kwargs):
                 logger.info(f"MenuPlaceholder not yet created. Skipping")
                 return
 
-            max_order = Menu.objects.filter(placeholder=ph).aggregate(Max("order"))[
-                "order__max"
-            ]
+            max_order = Menu.objects.filter(placeholder=ph).aggregate(Max("order"))["order__max"]
             order = 0 if max_order is None else max_order + 1
             menu = Menu.objects.create(title=title, placeholder=ph, order=order)
             MenuItem.objects.create(
@@ -41,9 +37,7 @@ def run_setup_hooks(*args, **kwargs):
                 url="/catalogue/#/search/?f=externalapplication",
             )
 
-    urlpatterns += [
-        re_path(r"^externalapplications/", include("externalapplications.urls"))
-    ]
+    urlpatterns += [re_path(r"^externalapplications/", include("externalapplications.urls"))]
 
 
 class ExternalapplicationsConfig(AppConfig):
