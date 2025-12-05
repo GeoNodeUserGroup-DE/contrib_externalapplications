@@ -6,7 +6,6 @@ from PIL import Image
 from django.urls import reverse
 from django.conf import settings
 from django.shortcuts import render
-from django.forms.utils import ErrorList
 from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404

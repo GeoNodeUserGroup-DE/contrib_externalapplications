@@ -13,7 +13,7 @@ class ExternalApplication(GeoApp):
         max_length=2000,
         null=False,
         blank=False,
-        help_text="Link to the external application",
+        help_text=_("Link to the external application"),
     )
 
     @property
