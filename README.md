@@ -70,7 +70,7 @@ Once, all external applications have been deleted the app can be removed by dele
 
 This contrib app was funded by
 
-| <img alt="Thünen Logo" align="middle" height="50" src="https://www.thuenen.de/typo3conf/ext/vc_theme/Resources/Public/Graphics/SVG-Logo.svg"/> | [Thünen-Institute](https://www.thuenen.de) | 
 | Logo | Funding Organization |
 |------|----------------------|
+| <img alt="Thünen Logo" align="middle" height="50" src="https://www.thuenen.de/_assets/9c8c8373163efb014a59249bdf796e91/Graphics/SVG-Logo.svg"/> | [Thünen-Institute](https://www.thuenen.de) |
 | <img alt="ZALF Logo" align="middle" height="50" src="https://www.zalf.de/_layouts/15/images/zalfweb/logo_zalf.png"/> | [Leibniz Centre for Agricultural Landscape Research](https://www.zalf.de/) |
