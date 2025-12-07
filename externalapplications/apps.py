@@ -23,7 +23,7 @@ def run_setup_hooks(*args, **kwargs):
         if not Menu.objects.filter(title=title).exists():
             ph = MenuPlaceholder.objects.filter(name="TOPBAR_MENU_LEFT").first()
             if not ph:
-                logger.info(f"MenuPlaceholder not yet created. Skipping")
+                logger.info("MenuPlaceholder not yet created. Skipping")
                 return
 
             max_order = Menu.objects.filter(placeholder=ph).aggregate(Max("order"))["order__max"]

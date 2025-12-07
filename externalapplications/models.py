@@ -6,14 +6,13 @@ from geonode.geoapps.models import GeoApp
 from geonode.utils import build_absolute_uri
 
 
-# Create your models here.
 class ExternalApplication(GeoApp):
 
     url = models.URLField(
         max_length=2000,
         null=False,
         blank=False,
-        help_text="Link to the external application",
+        help_text=_("Link to the external application"),
     )
 
     @property
