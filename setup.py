@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='externalapplications',
-    version='2.0.0',
+    version='3.0.0',
     packages=find_packages(),
     include_package_data=True,
     license='GPL',
@@ -20,6 +20,6 @@ setup(
     author='52North Developers',
     author_email='info@52north.org',
     install_requires=[
-        "geonode>=4.3.0",
+        "geonode>=5.0.0",
     ],
 )

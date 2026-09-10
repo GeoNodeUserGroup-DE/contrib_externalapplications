@@ -14,7 +14,7 @@ from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from geonode.utils import resolve_object
 from geonode.base import register_event
 from geonode.groups.models import GroupProfile
-from geonode.monitoring.models import EventType
+from geonode.base.enumerations import EventType
 from geonode.resource.manager import resource_manager
 from .forms import ExternalApplicationCreateForm
 from .models import ExternalApplication
