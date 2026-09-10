@@ -12,9 +12,9 @@ def run_setup_hooks(*args, **kwargs):
     from django.conf import settings
     from geonode.urls import urlpatterns
     from geonode.base.models import Menu, MenuItem, MenuPlaceholder
+    from . import views
 
     LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
-    settings.MAPSTORE_TRANSLATIONS_PATH += ("/static/mapstore/ea-translations",)
     settings.TEMPLATES[0]["DIRS"].insert(0, os.path.join(LOCAL_ROOT, "templates"))
     title = "External Applications"
 
@@ -34,10 +34,17 @@ def run_setup_hooks(*args, **kwargs):
                 menu=menu,
                 order=1,
                 blank_target=False,
-                url="/catalogue/#/search/?f=externalapplication",
+                url="/externalapplications",
             )
 
-    urlpatterns += [re_path(r"^externalapplications/", include("externalapplications.urls"))]
+    urlpatterns += [
+        re_path(
+            r"^externalapplications$",
+            views.external_applications_list,
+            name="external_applications_list",
+        ),
+        re_path(r"^externalapplications/", include("externalapplications.urls")),
+    ]
 
 
 class ExternalapplicationsConfig(AppConfig):

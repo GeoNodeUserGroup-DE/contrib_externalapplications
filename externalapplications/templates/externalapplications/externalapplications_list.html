@@ -1,0 +1,193 @@
+{% extends "externalapplications/externalapplications_base.html" %}
+
+{% load i18n %}
+
+{% block body %}
+  <div class="page-header">
+    {% if user.is_authenticated %}
+    <a href="{% url "external_application_create" %}" class="btn btn-primary pull-right">{% trans "Register External Application" %}</a>
+    {% endif %}
+    <h2>{% trans "External Applications" %}</h2>
+  </div>
+
+  <div id="ea-root"></div>
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+<script type="importmap">
+{
+    "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+        "react/jsx-dev-runtime": "https://esm.sh/react@18.3.1/jsx-dev-runtime",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?external=react",
+        "@chakra-ui/react": "https://esm.sh/@chakra-ui/react@3?external=react,react-dom"
+    }
+}
+</script>
+<script type="module">
+import React from "react";
+import { createRoot } from "react-dom/client";
+import {
+    ChakraProvider,
+    defaultSystem,
+    Box,
+    SimpleGrid,
+    Card,
+    Image,
+    Heading,
+    Text,
+    Button,
+    HStack,
+    Spinner,
+    Alert
+} from "@chakra-ui/react";
+
+const h = React.createElement;
+const PAGE_SIZE = 12;
+
+function buildQuery(page) {
+    return [
+        "filter{resource_type.in}=externalapplication",
+        "filter{metadata_only}=false",
+        "api_preset=catalog_list",
+        "page=" + encodeURIComponent(page),
+        "page_size=" + encodeURIComponent(PAGE_SIZE)
+    ].join("&");
+}
+
+function ExternalApplicationCard(resource) {
+    return h(
+        Card.Root,
+        { key: resource.pk },
+        resource.thumbnail_url
+            ? h(Image, { src: resource.thumbnail_url, alt: resource.title, height: "160px", objectFit: "cover" })
+            : null,
+        h(
+            Card.Body,
+            null,
+            h(Heading, { size: "md" }, resource.title),
+            h(Text, { color: "fg.muted" }, resource.raw_abstract)
+        ),
+        h(
+            Card.Footer,
+            null,
+            h(
+                Button,
+                { as: "a", href: resource.detail_url, target: "_blank", rel: "noopener", colorPalette: "blue" },
+                "{% trans "Open external application" %} »"
+            )
+        )
+    );
+}
+
+function ExternalApplicationsApp() {
+    const [status, setStatus] = React.useState("loading");
+    const [resources, setResources] = React.useState([]);
+    const [page, setPage] = React.useState(1);
+    const [pageSize, setPageSize] = React.useState(PAGE_SIZE);
+    const [total, setTotal] = React.useState(0);
+    const [links, setLinks] = React.useState({});
+
+    const loadPage = React.useCallback((requestedPage) => {
+        setStatus("loading");
+        fetch("/api/v2/resources/?" + buildQuery(requestedPage), {
+            credentials: "same-origin",
+            headers: { Accept: "application/json" }
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("HTTP " + response.status);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                const url = new URL(window.location.href);
+                url.searchParams.set("page", data.page);
+                window.history.replaceState({}, "", url);
+
+                setResources(data.resources || []);
+                setPage(data.page);
+                setPageSize(data.page_size);
+                setTotal(data.total);
+                setLinks(data.links || {});
+                setStatus(data.resources && data.resources.length ? "ready" : "empty");
+            })
+            .catch((error) => {
+                console.error("Failed to load external applications", error);
+                setStatus("error");
+            });
+    }, []);
+
+    React.useEffect(() => {
+        const match = /[?&]page=(\d+)/.exec(window.location.search);
+        loadPage(match ? parseInt(match[1], 10) : 1);
+    }, [loadPage]);
+
+    if (status === "loading") {
+        return h(Spinner, { size: "xl" });
+    }
+
+    if (status === "error") {
+        return h(
+            Alert.Root,
+            { status: "error" },
+            h(Alert.Indicator),
+            h(Alert.Title, null, "{% trans "Could not load external applications." %}")
+        );
+    }
+
+    if (status === "empty") {
+        return h(Text, null, "{% trans "No external applications available yet." %}");
+    }
+
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+    return h(
+        Box,
+        null,
+        h(
+            SimpleGrid,
+            { columns: { base: 1, md: 3 }, gap: "4", mb: "4" },
+            resources.map(ExternalApplicationCard)
+        ),
+        h(
+            HStack,
+            { justify: "center", gap: "3", mt: "6" },
+            h(
+                Button,
+                {
+                    onClick: () => loadPage(page - 1),
+                    disabled: !links.previous,
+                    variant: "outline",
+                    colorPalette: "blue",
+                    size: "sm"
+                },
+                "« {% trans "Previous" %}"
+            ),
+            h(
+                Text,
+                { fontSize: "sm", color: "fg.muted", px: "2" },
+                page + " / " + totalPages
+            ),
+            h(
+                Button,
+                {
+                    onClick: () => loadPage(page + 1),
+                    disabled: !links.next,
+                    variant: "outline",
+                    colorPalette: "blue",
+                    size: "sm"
+                },
+                "{% trans "Next" %} »"
+            )
+        )
+    );
+}
+
+const root = createRoot(document.getElementById("ea-root"));
+root.render(h(ChakraProvider, { value: defaultSystem }, h(ExternalApplicationsApp)));
+</script>
+{% endblock %}
